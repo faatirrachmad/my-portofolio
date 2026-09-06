@@ -1,3 +1,9 @@
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
 :root {
     --bg-primary: #0b0914;
     --bg-secondary: #151124;
@@ -6,24 +12,59 @@
     --text-main: #f3f4f6;
     --text-muted: #9ca3af;
     --border-color: #271e3d;
+    --radius: 8px;
 }
 
 body {
-    background-color: var(--bg-primary);
+    font-family: -apple-system, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
     color: var(--text-main);
-    font-family: sans-serif;
-    margin: 0;
+    background-color: var(--bg-primary);
+    line-height: 1.6;
 }
 
+h1,
+.brand,
+h2,
+h3 {
+    font-family: "Space Grotesk", -apple-system, sans-serif;
+}
+
+.container {
+    max-width: 960px;
+    margin: 0 auto;
+    padding: 0 1.5rem;
+}
+
+/* HEADER & NAVBAR */
 .site-header {
     background-color: var(--bg-secondary);
     border-bottom: 1px solid var(--border-color);
 }
 
-.brand,
+.site-header .container {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 1.25rem 1.5rem;
+}
+
+.brand {
+    font-size: 1.3rem;
+    font-weight: 700;
+    color: var(--text-main);
+    text-decoration: none;
+}
+
+.site-header nav {
+    display: flex;
+    gap: 2rem;
+}
+
 .site-header nav a {
     color: var(--text-main);
     text-decoration: none;
+    font-size: 0.95rem;
+    transition: color 0.2s ease;
 }
 
 .site-header nav a:hover,
@@ -31,36 +72,84 @@ body {
     color: var(--accent-purple-light);
 }
 
+/* HERO SECTION */
+.hero {
+    padding: 4.5rem 0 3rem;
+}
+
+.hero-grid {
+    display: grid;
+    grid-template-columns: 1.3fr 1fr;
+    grid-template-areas:
+        "identity photo"
+        "details  photo";
+    gap: 1.5rem 3rem;
+}
+
+.hero-identity {
+    grid-area: identity;
+}
+
+.hero-details {
+    grid-area: details;
+}
+
 .hero-kicker {
+    font-size: 0.85rem;
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
     color: var(--accent-purple-light);
-    font-weight: bold;
+    font-weight: 700;
+    margin-bottom: 0.75rem;
 }
 
-.photo-block {
-    background: linear-gradient(135deg, var(--accent-purple), #3b0764);
-    border-radius: 12px;
+.hero-identity h1 {
+    font-size: clamp(3rem, 7vw, 5rem);
+    line-height: 0.95;
+    color: var(--text-main);
 }
 
-.meta-row {
-    border-bottom: 1px solid var(--border-color);
+.bio {
+    color: var(--text-muted);
+    max-width: 480px;
+    margin-bottom: 1.5rem;
+}
+
+.meta-list {
+    display: flex;
+    gap: 2rem;
+    margin-bottom: 1.5rem;
 }
 
 .meta-row dt {
+    font-size: 0.75rem;
+    text-transform: uppercase;
+    letter-spacing: 0.06em;
     color: var(--text-muted);
+    margin-bottom: 0.15rem;
 }
 
 .meta-row dd {
+    font-weight: 600;
     color: var(--text-main);
 }
 
+.social-links {
+    display: flex;
+    gap: 0.5rem;
+    flex-wrap: wrap;
+}
+
 .social-link {
+    display: inline-block;
+    font-size: 0.85rem;
+    font-weight: 600;
+    text-decoration: none;
+    color: var(--text-main);
     background-color: var(--bg-secondary);
     border: 1px solid var(--border-color);
-    color: var(--text-main);
-    padding: 0.5rem 1.25rem;
-    border-radius: 9999px;
-    text-decoration: none;
-    display: inline-block;
+    border-radius: var(--radius);
+    padding: 0.5rem 1.1rem;
     transition: all 0.2s ease;
 }
 
@@ -70,9 +159,116 @@ body {
     color: #ffffff;
 }
 
-.site-footer {
-    border-top: 1px solid var(--border-color);
+/* FOTO PROFIL & FRAME UNGU */
+.hero-photo {
+    grid-area: photo;
+    align-self: center;
+    position: relative;
+    max-width: 350px;
+    margin: 0 auto;
+}
+
+.photo-block {
+    position: absolute;
+    top: 1rem;
+    left: 1rem;
+    width: 100%;
+    height: 100%;
+    background: linear-gradient(135deg, var(--accent-purple), #3b0764);
+    border-radius: var(--radius);
+    z-index: 0;
+}
+
+.avatar {
+    position: relative;
+    z-index: 1;
+    display: block;
+    width: 100%;
+    aspect-ratio: 1 / 1;
+    object-fit: cover;
+    border-radius: var(--radius);
+    border: 2px solid var(--border-color);
+}
+
+/* SECTION KHUSUS (EXPERIENCE, EDUCATION, PROJECTS) */
+.portfolio-section {
+    margin: 3rem 0;
+}
+
+.portfolio-section h2 {
+    color: var(--text-main);
+    border-bottom: 2px solid var(--border-color);
+    padding-bottom: 0.5rem;
+    margin-bottom: 1.5rem;
+}
+
+.card {
+    background-color: var(--bg-secondary);
+    border: 1px solid var(--border-color);
+    border-radius: var(--radius);
+    padding: 1.25rem;
+    margin-bottom: 1rem;
+}
+
+.card h3 {
+    color: var(--accent-purple-light);
+    margin-top: 0;
+    margin-bottom: 0.25rem;
+}
+
+.card .subtitle {
     color: var(--text-muted);
-    text-align: center;
+    font-size: 0.9rem;
+    margin-bottom: 0.75rem;
+}
+
+.card p,
+.card ul {
+    color: var(--text-main);
+    font-size: 0.95rem;
+}
+
+.card ul {
+    margin: 0;
+    padding-left: 1.2rem;
+}
+
+.grid-2col {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 1rem;
+}
+
+/* FOOTER */
+.site-footer {
     padding: 2rem 0;
+    color: var(--text-muted);
+    font-size: 0.85rem;
+    text-align: center;
+    border-top: 1px solid var(--border-color);
+    margin-top: 3rem;
+}
+
+/* RESPONSIVE LAYOUT (MOBILE) */
+@media (max-width: 600px) {
+    .hero-grid {
+        grid-template-columns: 1fr;
+        grid-template-areas:
+            "identity"
+            "photo"
+            "details";
+    }
+
+    .hero-photo {
+        max-width: 220px;
+        margin-bottom: 1.5rem;
+    }
+
+    .social-links {
+        justify-content: flex-start;
+    }
+
+    .grid-2col {
+        grid-template-columns: 1fr;
+    }
 }
