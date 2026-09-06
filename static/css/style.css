@@ -1,254 +1,402 @@
-/* ================= EXPERIENCE PAGE ================= */
-
-.experience-page {
-    display: none;
-    min-height: 100vh;
-    padding: 100px 0;
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
 }
 
-/* Experience hanya muncul ketika navbar Experience diklik */
-#experience:target {
-    display: block;
+:root {
+    --bg-primary: #0b0914;
+    --bg-secondary: #151124;
+    --accent-purple: #9333ea;
+    --accent-purple-light: #a855f7;
+    --text-main: #f3f4f6;
+    --text-muted: #9ca3af;
+    --border-color: #271e3d;
+    --radius: 8px;
 }
 
-
-/* Back button */
-
-.experience-top {
-    margin-bottom: 50px;
+body {
+    font-family: -apple-system, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+    color: var(--text-main);
+    background-color: var(--bg-primary);
+    line-height: 1.6;
+    overflow-x: hidden;
 }
 
-.back-link {
-    display: inline-flex;
+h1,
+.brand,
+h2,
+h3 {
+    font-family: "Space Grotesk", -apple-system, sans-serif;
+}
+
+.container {
+    max-width: 960px;
+    margin: 0 auto;
+    padding: 0 1.5rem;
+}
+
+.site-header {
+    background-color: var(--bg-secondary);
+    border-bottom: 1px solid var(--border-color);
+    position: sticky;
+    top: 0;
+    z-index: 50;
+    backdrop-filter: blur(10px);
+}
+
+.site-header .container {
+    display: flex;
+    justify-content: space-between;
     align-items: center;
-    gap: 8px;
+    padding: 1.25rem 1.5rem;
+}
 
-    text-decoration: none;
-    font-size: 14px;
+.brand {
+    font-size: 1.3rem;
     font-weight: 700;
-
-    transition: transform 0.2s ease;
+    color: var(--text-main);
+    text-decoration: none;
 }
 
-.back-link:hover {
-    transform: translateX(-4px);
+.site-header nav {
+    display: flex;
+    gap: 2rem;
 }
 
-
-/* Header */
-
-.experience-page .section-header {
-    max-width: 750px;
-    margin-bottom: 70px;
+.site-header nav a {
+    color: var(--text-main);
+    text-decoration: none;
+    font-size: 0.95rem;
+    transition: color 0.2s ease;
 }
 
-.experience-page .section-description {
-    max-width: 600px;
-    line-height: 1.7;
-    margin-top: 15px;
+.site-header nav a:hover,
+.brand:hover {
+    color: var(--accent-purple-light);
 }
 
+.hero {
+    padding: 4.5rem 0 3rem;
+}
 
-/* Timeline */
+.hero-grid {
+    display: grid;
+    grid-template-columns: 1.3fr 1fr;
+    grid-template-areas:
+        "identity photo"
+        "details  photo";
+    gap: 1.5rem 3rem;
+    align-items: start;
+}
 
-.timeline {
+.hero-identity {
+    grid-area: identity;
+}
+
+.hero-details {
+    grid-area: details;
+}
+
+.hero-kicker {
+    font-size: 0.85rem;
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+    color: var(--accent-purple-light);
+    font-weight: 700;
+    margin-bottom: 0.75rem;
+}
+
+.hero-identity h1 {
+    font-size: clamp(2.5rem, 5vw, 4rem);
+    line-height: 1.1;
+    color: var(--text-main);
+}
+
+.bio {
+    color: var(--text-muted);
+    max-width: 480px;
+    margin-bottom: 1.5rem;
+}
+
+.meta-list {
+    display: flex;
+    gap: 2rem;
+    margin-bottom: 1.5rem;
+}
+
+.meta-row dt {
+    font-size: 0.75rem;
+    text-transform: uppercase;
+    letter-spacing: 0.06em;
+    color: var(--text-muted);
+    margin-bottom: 0.15rem;
+}
+
+.meta-row dd {
+    font-weight: 600;
+    color: var(--text-main);
+}
+
+.social-links {
+    display: flex;
+    gap: 0.5rem;
+    flex-wrap: wrap;
+}
+
+.social-link {
+    display: inline-block;
+    font-size: 0.85rem;
+    font-weight: 600;
+    text-decoration: none;
+    color: var(--text-main);
+    background-color: var(--bg-secondary);
+    border: 1px solid var(--border-color);
+    border-radius: var(--radius);
+    padding: 0.5rem 1.1rem;
+    transition: all 0.2s ease;
+}
+
+.social-link:hover {
+    background-color: var(--accent-purple);
+    border-color: var(--accent-purple-light);
+    color: #ffffff;
+}
+
+.hero-photo {
+    grid-area: photo;
     position: relative;
-    max-width: 900px;
+    width: 100%;
+    max-width: 280px;
     margin: 0 auto;
 }
 
-/* Garis timeline */
-
-.timeline::before {
-    content: "";
+.photo-block {
     position: absolute;
-
-    left: 24px;
-    top: 10px;
-    bottom: 10px;
-
-    width: 2px;
-    background: currentColor;
-    opacity: 0.15;
+    top: 0.75rem;
+    left: 0.75rem;
+    width: 100%;
+    height: 100%;
+    background: linear-gradient(135deg, var(--accent-purple), #3b0764);
+    border-radius: var(--radius);
+    z-index: 0;
 }
 
-
-/* Timeline item */
-
-.timeline-item {
+.avatar {
     position: relative;
-
-    display: grid;
-    grid-template-columns: 50px 1fr;
-    gap: 30px;
-
-    margin-bottom: 45px;
+    z-index: 1;
+    display: block;
+    width: 100%;
+    max-width: 100%;
+    height: auto;
+    aspect-ratio: 1 / 1;
+    object-fit: cover;
+    border-radius: var(--radius);
+    border: 2px solid var(--border-color);
 }
 
+.experience-page {
+    padding: 4rem 0;
+}
 
-/* Number */
+.experience-top,
+.experience-footer {
+    margin-bottom: 1.5rem;
+}
 
-.timeline-marker {
-    position: relative;
-    z-index: 2;
+.experience-footer {
+    margin-top: 3rem;
+}
 
-    width: 50px;
-    height: 50px;
+.back-link {
+    color: var(--accent-purple-light);
+    text-decoration: none;
+    font-size: 0.9rem;
+    font-weight: 600;
+    transition: color 0.2s ease;
+}
 
-    display: flex;
-    align-items: center;
-    justify-content: center;
+.back-link:hover {
+    color: #ffffff;
+}
 
-    border: 2px solid currentColor;
-    border-radius: 50%;
+.section-header {
+    margin-bottom: 2.5rem;
+}
 
-    background: inherit;
-
-    font-size: 13px;
+.section-kicker {
+    font-size: 0.8rem;
+    text-transform: uppercase;
+    letter-spacing: 0.08em;
+    color: var(--accent-purple-light);
     font-weight: 700;
 }
 
+.section-header h2 {
+    color: var(--text-main);
+    font-size: 2rem;
+    margin: 0.2rem 0 0.5rem;
+}
 
-/* Card */
+.section-description {
+    color: var(--text-muted);
+    font-size: 1rem;
+    max-width: 600px;
+}
+
+.timeline {
+    position: relative;
+    display: flex;
+    flex-direction: column;
+    gap: 2rem;
+}
+
+.timeline-item {
+    display: flex;
+    gap: 1.5rem;
+    align-items: flex-start;
+}
+
+.timeline-marker {
+    flex-shrink: 0;
+    width: 42px;
+    height: 42px;
+    border-radius: 50%;
+    background-color: var(--bg-secondary);
+    border: 2px solid var(--accent-purple);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-weight: 700;
+    font-size: 0.9rem;
+    color: var(--accent-purple-light);
+    box-shadow: 0 0 10px rgba(147, 51, 234, 0.3);
+    animation: pulse 2.5s infinite;
+}
+
+@keyframes pulse {
+    0% {
+        box-shadow: 0 0 0 0 rgba(168, 85, 247, 0.6);
+    }
+
+    70% {
+        box-shadow: 0 0 0 10px rgba(168, 85, 247, 0);
+    }
+
+    100% {
+        box-shadow: 0 0 0 0 rgba(168, 85, 247, 0);
+    }
+}
 
 .experience-card {
-    padding: 32px;
-
-    border: 1px solid rgba(0, 0, 0, 0.12);
-    border-radius: 16px;
-
-    transition:
-        transform 0.25s ease,
-        box-shadow 0.25s ease;
+    flex-grow: 1;
+    background-color: var(--bg-secondary);
+    border: 1px solid var(--border-color);
+    border-left: 3px solid var(--border-color);
+    border-radius: var(--radius);
+    padding: 1.5rem;
+    transition: transform 0.3s ease, box-shadow 0.3s ease, border-color 0.3s ease;
 }
 
 .experience-card:hover {
-    transform: translateY(-5px);
-    box-shadow: 0 15px 35px rgba(0, 0, 0, 0.08);
+    transform: translateY(-4px);
+    box-shadow: 0 8px 25px rgba(147, 51, 234, 0.2);
+    border-left-color: var(--accent-purple-light);
 }
-
-
-/* Card header */
 
 .card-header {
     display: flex;
     justify-content: space-between;
     align-items: flex-start;
-
-    gap: 20px;
-    margin-bottom: 25px;
+    gap: 1rem;
+    margin-bottom: 1rem;
 }
 
 .experience-type {
-    margin: 0 0 7px;
-
-    font-size: 12px;
-    font-weight: 700;
+    font-size: 0.75rem;
     text-transform: uppercase;
-    letter-spacing: 1.5px;
-
-    opacity: 0.55;
+    letter-spacing: 0.06em;
+    color: var(--accent-purple-light);
+    font-weight: 700;
+    margin-bottom: 0.2rem;
 }
 
-.experience-card h3 {
+.card-header h3 {
+    color: var(--text-main);
+    font-size: 1.25rem;
     margin: 0;
-
-    font-size: 22px;
 }
 
 .organization {
-    margin-top: 7px;
-
-    font-size: 15px;
-    font-weight: 700;
-
-    opacity: 0.65;
+    color: var(--text-muted);
+    font-size: 0.95rem;
+    font-weight: 500;
+    margin-top: 0.1rem;
 }
-
-
-/* Date */
 
 .badge-date {
+    background-color: rgba(147, 51, 234, 0.15);
+    color: var(--accent-purple-light);
+    font-size: 0.8rem;
+    font-weight: 600;
+    padding: 0.3rem 0.8rem;
+    border-radius: 999px;
+    border: 1px solid var(--border-color);
     white-space: nowrap;
-
-    padding: 7px 12px;
-
-    border: 1px solid currentColor;
-    border-radius: 50px;
-
-    font-size: 12px;
-    font-weight: 700;
-
-    opacity: 0.7;
 }
 
-
-/* Content */
-
-.experience-content>p {
-    line-height: 1.7;
-    margin-bottom: 20px;
+.experience-content p {
+    color: var(--text-muted);
+    font-size: 0.95rem;
+    margin-bottom: 1rem;
 }
 
 .experience-list {
-    margin: 0;
-    padding-left: 20px;
+    color: var(--text-main);
+    font-size: 0.92rem;
+    padding-left: 1.2rem;
 }
 
 .experience-list li {
-    margin-bottom: 10px;
-    line-height: 1.6;
+    margin-bottom: 0.5rem;
+    color: var(--text-muted);
 }
 
-
-/* Footer */
-
-.experience-footer {
-    margin-top: 60px;
-    padding-top: 30px;
-
-    border-top: 1px solid rgba(0, 0, 0, 0.12);
+.experience-list li strong {
+    color: var(--text-main);
 }
 
+.site-footer {
+    padding: 2rem 0;
+    color: var(--text-muted);
+    font-size: 0.85rem;
+    text-align: center;
+    border-top: 1px solid var(--border-color);
+    margin-top: 3rem;
+}
 
-/* ================= MOBILE ================= */
-
-@media (max-width: 700px) {
-
-    .experience-page {
-        padding: 70px 0;
+@media (max-width: 768px) {
+    .hero-grid {
+        grid-template-columns: 1fr;
+        grid-template-areas:
+            "identity"
+            "photo"
+            "details";
     }
 
-    .timeline::before {
-        left: 19px;
+    .hero-photo {
+        max-width: 220px;
+        margin: 1rem auto 2rem;
     }
 
     .timeline-item {
-        grid-template-columns: 40px 1fr;
-        gap: 18px;
-    }
-
-    .timeline-marker {
-        width: 40px;
-        height: 40px;
-
-        font-size: 11px;
-    }
-
-    .experience-card {
-        padding: 22px;
+        flex-direction: column;
+        gap: 0.75rem;
     }
 
     .card-header {
         flex-direction: column;
-        gap: 12px;
-    }
-
-    .experience-card h3 {
-        font-size: 19px;
-    }
-
-    .badge-date {
-        align-self: flex-start;
+        align-items: flex-start;
+        gap: 0.5rem;
     }
 }
