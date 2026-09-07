@@ -1,9 +1,11 @@
+/* Reset dasar agar tampilan konsisten di setiap browser. */
 * {
     margin: 0;
     padding: 0;
     box-sizing: border-box;
 }
 
+/* Variabel warna dan ukuran utama website. */
 :root {
     --bg-primary: #0b0914;
     --bg-secondary: #151124;
@@ -15,6 +17,7 @@
     --radius: 8px;
 }
 
+/* Tampilan dasar seluruh halaman. */
 body {
     font-family: -apple-system, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
     color: var(--text-main);
@@ -30,12 +33,14 @@ h3 {
     font-family: "Space Grotesk", -apple-system, sans-serif;
 }
 
+/* Pembatas lebar konten agar tetap rapi di layar besar. */
 .container {
     max-width: 960px;
     margin: 0 auto;
     padding: 0 1.5rem;
 }
 
+/* Header yang tetap terlihat saat halaman digulir. */
 .site-header {
     background-color: var(--bg-secondary);
     border-bottom: 1px solid var(--border-color);
@@ -76,10 +81,12 @@ h3 {
     color: var(--accent-purple-light);
 }
 
+/* Jarak untuk bagian profil utama. */
 .hero {
     padding: 4.5rem 0 3rem;
 }
 
+/* Layout dua kolom profil pada desktop. */
 .hero-grid {
     display: grid;
     grid-template-columns: 1.3fr 1fr;
@@ -138,6 +145,7 @@ h3 {
     color: var(--text-main);
 }
 
+/* Menata tombol tautan media sosial. */
 .social-links {
     display: flex;
     gap: 0.5rem;
@@ -171,6 +179,7 @@ h3 {
     margin: 0 auto;
 }
 
+/* Latar dekoratif bergradasi di belakang foto profil. */
 .photo-block {
     position: absolute;
     top: 0.75rem;
@@ -182,6 +191,7 @@ h3 {
     z-index: 0;
 }
 
+/* Menjaga foto profil tetap berbentuk persegi dan proporsional. */
 .avatar {
     position: relative;
     z-index: 1;
@@ -375,6 +385,7 @@ h3 {
     margin-top: 3rem;
 }
 
+/* Menyesuaikan hero section untuk layar mobile. */
 @media (max-width: 768px) {
     .hero-grid {
         grid-template-columns: 1fr;
@@ -401,16 +412,19 @@ h3 {
     }
 }
 
+/* Jarak vertikal antarbagian portofolio. */
 .portfolio-section {
     padding: 4rem 1.5rem 0;
 }
 
+/* Grid dua kolom untuk kartu pengalaman. */
 .experience-grid {
     display: grid;
     grid-template-columns: repeat(2, minmax(0, 1fr));
     gap: 1.25rem;
 }
 
+/* Tampilan utama kartu pengalaman. */
 .experience-card {
     display: flex;
     flex-direction: column;
@@ -474,6 +488,7 @@ h3 {
     font-size: 0.93rem;
 }
 
+/* Grid untuk foto dokumentasi kegiatan. */
 .documentation-grid {
     display: grid;
     grid-template-columns: repeat(2, 1fr);
@@ -524,6 +539,7 @@ h3 {
     font-size: 0.85rem;
 }
 
+/* Mengubah kartu pengalaman menjadi satu kolom di mobile. */
 @media (max-width: 768px) {
     .experience-grid {
         grid-template-columns: 1fr;
@@ -534,6 +550,7 @@ h3 {
     }
 }
 
+/* Grid dua kolom untuk kartu kemampuan. */
 .skills-grid {
     display: grid;
     grid-template-columns: repeat(2, minmax(0, 1fr));
@@ -589,12 +606,14 @@ h3 {
     font-size: 0.82rem;
 }
 
+/* Mengubah kartu kemampuan menjadi satu kolom di mobile. */
 @media (max-width: 768px) {
     .skills-grid {
         grid-template-columns: 1fr;
     }
 }
 
+/* Roadmap pendidikan dalam empat kolom pada desktop. */
 .education-roadmap {
     position: relative;
     display: grid;
@@ -704,6 +723,7 @@ h3 {
     object-position: center 25%;
 }
 
+/* Mengubah roadmap pendidikan menjadi vertikal di mobile. */
 @media (max-width: 768px) {
     .education-roadmap {
         grid-template-columns: 1fr;
