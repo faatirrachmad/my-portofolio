@@ -764,3 +764,80 @@ h3 {
         object-position: center 25%;
     }
 }
+
+.experience-section {
+    padding: 4rem 0;
+    border-top: 1px solid var(--border-color);
+}
+
+.experience-section .section-kicker {
+    color: var(--accent-purple-light);
+    font-size: 0.8rem;
+    font-weight: 700;
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+}
+
+.experience-section h1 {
+    margin: 0.4rem 0 1.5rem;
+    font-size: 2rem;
+}
+
+.experience-section .experience-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
+    gap: 1rem;
+}
+
+.experience-section .experience-card {
+    padding: 1.25rem;
+    background:
+        radial-gradient(circle at top right, rgba(147, 51, 234, 0.2), transparent 45%),
+        var(--bg-secondary);
+    border: 1px solid var(--border-color);
+    border-radius: var(--radius);
+}
+
+.experience-section .experience-category {
+    color: var(--accent-purple-light);
+    font-size: 0.75rem;
+    font-weight: 700;
+    text-transform: uppercase;
+}
+
+.experience-section .experience-card h2 {
+    margin: 0.5rem 0;
+    color: var(--text-main);
+    font-size: 1.25rem;
+}
+
+.experience-section .experience-description,
+.experience-section .empty-state {
+    color: var(--text-muted);
+}
+
+.experience-section .experience-status {
+    margin-top: 1rem;
+    color: var(--accent-purple-light);
+    font-size: 0.85rem;
+    font-weight: 600;
+}
+
+/* Kontras khusus untuk kartu pada halaman Experience. */
+.experience-section .experience-card {
+    background-color: #151124 !important;
+    background-image: radial-gradient(circle at top right, rgba(147, 51, 234, 0.22), transparent 45%) !important;
+}
+
+.experience-section .experience-card h2 {
+    color: #f9fafb !important;
+}
+
+.experience-section .experience-description {
+    color: #d1d5db !important;
+}
+
+.experience-section .experience-category,
+.experience-section .experience-status {
+    color: #c084fc !important;
+}
