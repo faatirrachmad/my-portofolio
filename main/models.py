@@ -27,3 +27,23 @@ class Experience(models.Model):
     @property
     def is_ongoing(self):
         return self.ended_at is None
+
+
+class Skill(models.Model):
+    # Pilihan kategori menjaga data skill tetap konsisten di database.
+    CATEGORY_CHOICES = [
+        ("technical", "Technical Skill"),
+        ("soft", "Soft Skill"),
+    ]
+
+    id = models.UUIDField(primary_key=True, default=uuid.uuid4, editable=False)
+    name = models.CharField(max_length=100)
+    category = models.CharField(
+        max_length=20,
+        choices=CATEGORY_CHOICES,
+    )
+    description = models.TextField()
+    created_at = models.DateTimeField(auto_now_add=True)
+
+    def __str__(self):
+        return self.name
