@@ -15,3 +15,14 @@ Class :   PBP C
  nya bisa mengirim pesan ke saya langsung atau email langsung gitu.
 
  **AI disclosure**: pada tugas ini saya menggunakan gemini dan claude untuk membantu saya dalam proses saat saya mengalami error, dan buat referensi struktur HTML, dan membantu saya cara menampilkan website pada tampilan mobilenya itu rapih dan tidak sempit. dan saya juga menggunakan ai untuk cek kode CSS saya.
+
+
+ ### Tugas 2
+ 1. alur yang terjadi saat pengguna membuka halaman portofolio adalah browser mengirimkan request ke URL yang dituju. Request tersebut pertama kali diterima adalah oleh portofolio/urls.py, lalu dilanjutkan ke main/urls.py. Setelah URL yang sesuai ditemukan, Django menjalankan function view pada main/views.py. View ini ngambil data dari model jika diperlukan (contohnya adalah experience atau skills).kemudian contextnay dikirimkan ke template HTML melalui fungsi render(). Hasil HTML akhirnya dikirim sebagai response buat dikirim ke browser.
+
+ 2. Data sebaiknya disimpan di dalam model karena template hanya berguna untuk menampilkan data, kalau model dia mengatur datanya dan menyimpannya dalam database. Dengan disimpan di model, data dapat ditambah, diubah, atau dihapus tanpa kita harus mengedit file HTML secara langsung.
+
+ 3. makemigrations digunakan buat membuat file migration berdasarkan perubahan pada model. sedangkan kalo migrate itu digunakan untuk menerapkan migration tersebut ke dalam database. Contohnya adalah ketika saya buat model Skill di main/models.py, saya perlu menjalankan perintah python manage.py makemigrations untuk buat file migration 0002_skill.py. Setelah itu, saya menjalankan perintah python manage.py migrate agar tabel buat model Skill dibuat didalam database.
+
+ **AI Disclosure**  : pada tugas ini saya menggunakan Claude untuk membantu mengecek struktur implementasi model, view, URL, template, dan pengujian pada aplikasi Django. Saya juga menggunakan Claude dan Chatgpt untuk membantu memahami alur request Django, perbedaan perintah `makemigrations` dan `migrate`
+
