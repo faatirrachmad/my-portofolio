@@ -26,3 +26,14 @@ Class :   PBP C
 
  **AI Disclosure**  : pada tugas ini saya menggunakan Claude untuk membantu mengecek struktur implementasi model, view, URL, template, dan pengujian pada aplikasi Django. Saya juga menggunakan Claude dan Chatgpt untuk membantu memahami alur request Django, perbedaan perintah `makemigrations` dan `migrate`
 
+
+## Tugas 3
+
+1. ModelForm digunakan karena formnya langsung terhubung dengan model yang ada di database. Jadi saya tidak perlu membuat semua input dan validasinya secara manual di HTML. Contohnya pada `ProjectForm`, field seperti title, description, dan project_url sudah mengikuti aturan dari model Project. `{% csrf_token %}` digunakan untuk keamanan form, supaya Django bisa memastikan request POST tersebut benar-benar berasal dari halaman website saya dan bukan dari website lain.
+
+2. JSON lebih banyak digunakan pada aplikasi web modern karena formatnya lebih sederhana, ringan, dan mudah dibaca oleh JavaScript. JSON juga langsung cocok dengan bentuk object pada JavaScript. Sedangkan XML biasanya lebih panjang karena menggunakan banyak tag pembuka dan penutup, sehingga ukuran datanya lebih besar dan prosesnya lebih ribet.
+
+3. Saya menggunakan view `get_projects_json` untuk mengembalikan data project dalam bentuk JSON. Sebelum dikirim, data dari model Project perlu diserialization karena data dari database masih berupa QuerySet atau object Django yang tidak bisa langsung dikirim sebagai response JSON. Dengan `serializers.serialize("json", projects)`, data project diubah menjadi format JSON agar bisa dibaca oleh aplikasi lain atau JavaScript di browser.
+
+**AI Disclosure**: pada tugas ini saya menggunakan ChatGPT untuk membantu memahami penggunaan ModelForm, csrf token, serialization JSON, serta mengecek alur fitur create, update, delete, dan JSON data delivery pada aplikasi Django.
+
