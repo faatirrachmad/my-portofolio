@@ -8,6 +8,10 @@ from main.views import (
     show_projects,
     show_skills,
     update_project,
+    toggle_star,
+    register,
+    login_user,
+    logout_user,
 )
 
 app_name = "main"
@@ -25,4 +29,14 @@ urlpatterns = [
          update_project,
          name="update_project",
          ),
+    # URL untuk pendaftaran akun dan sesi login pengguna.
+    path("register/", register, name="register"),
+    path("login/", login_user, name="login"),
+    path("logout/", logout_user, name="logout"),
+    # URL POST untuk memberi atau membatalkan star pada proyek.
+    path(
+        "projects/<uuid:project_id>/star/",
+        toggle_star,
+        name="toggle_star",
+    ),
 ]

@@ -1084,6 +1084,24 @@ h3 {
     background: #b42318;
 }
 
+/* Menjaga tombol star sejajar dengan kontrol proyek lainnya. */
+.star-form {
+    display: inline;
+}
+
+.button-star {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.4rem;
+}
+
+.star-count {
+    padding: 0.05rem 0.4rem;
+    border-radius: 999px;
+    background: rgba(255, 255, 255, 0.25);
+    font-size: 0.8rem;
+}
+
 @media (max-width: 600px) {
     .project-header {
         align-items: flex-start;
