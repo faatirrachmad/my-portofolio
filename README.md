@@ -37,3 +37,10 @@ Class :   PBP C
 
 **AI Disclosure**: pada tugas ini saya menggunakan ChatGPT untuk membantu memahami penggunaan ModelForm, csrf token, serialization JSON, serta mengecek alur fitur create, update, delete, dan JSON data delivery pada aplikasi Django.
 
+## Tugas 4
+
+**AI Disclosure**: Saya menggunakan ChatGPT untuk insight dan mengecek penerapan autentikasi sama otorisasi Django di tugas ini. Saya memberikan konteks ke AI kayak hak akses pengunjung, pengguna biasa, Editor, dan pemilik portofolio. Diskusi saya sama AI difokuskan pada penggunaan Group dan permission change_project, pemeriksaan akses di view dan template, serta pembatasan field yang dikirim oleh endpoint JSON. ChatGPT juga memberikan contoh potongan kode yang saya sesuaikan dengan struktur proyek yang sudah ada.
+
+**Strategi prompting**: Saya menyampaikan aturan akses dari rubrik, lalu meminta AI mengidentifikasi bagian aplikasi yang perlu diperiksa, terutama pas perbedaan hak Editor dan pemilik serta kemungkinan data pengguna ikut terbuka melalui API.
+
+**Evaluasi dan verifikasi**: Saran AI saya gunakan sebagai referensi dan saya sesuaikan dengan model Project, URL, serta template proyek. Saran tersebut tetap perlu diperiksa pada aplikasi yang berjalan karena AI tidak mengetahui kondisi aktual Group, permission, dan database yang saya gunakan. Pengujian akhir untuk setiap role dilakukan dengan memeriksa akses melalui halaman dan URL aksi secara langsung.
