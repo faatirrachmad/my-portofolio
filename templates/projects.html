@@ -21,9 +21,8 @@
             </div>
 
             <form method="get" action="{% url 'main:show_projects' %}" class="project-search">
-                <input type="search" name="title" value="{{ title_query }}"
-                    placeholder="Cari berdasarkan nama proyek" class="project-search__input"
-                    aria-label="Cari berdasarkan nama proyek">
+                <input type="search" name="title" value="{{ title_query }}" placeholder="Cari berdasarkan nama proyek"
+                    class="project-search__input" aria-label="Cari berdasarkan nama proyek">
                 <button type="submit" class="button">Cari</button>
             </form>
 
@@ -47,11 +46,15 @@
                             <!-- Pengguna terdaftar dapat memberi atau membatalkan star. -->
                             {% include "components/project_star.html" with project=project %}
 
-                            <!-- Hanya pemilik yang mendapat kontrol edit dan hapus. -->
-                            {% if user.is_superuser %}
+                            <!-- Pemilik dan Editor boleh mengedit proyek. -->
+                            {% if perms.main.change_project %}
                             <a href="{% url 'main:update_project' project.id %}" class="button button-secondary">
                                 Edit Project
                             </a>
+                            {% endif %}
+
+                            <!-- Hanya pemilik yang boleh menghapus proyek. -->
+                            {% if user.is_superuser %}
                             {% include "components/project_delete_modal.html" with project=project %}
                             {% endif %}
                         </div>
