@@ -8,7 +8,7 @@ from django.core.exceptions import PermissionDenied
 from django.http import HttpResponse
 from django.shortcuts import get_object_or_404, redirect, render
 from django.utils import timezone
-
+from django.http import HttpResponseNotAllowed
 from main.forms import ProjectForm
 from main.models import Experience, Project, Skill
 
@@ -66,7 +66,7 @@ def show_projects(request):
 
 @login_required(login_url="/login/")
 def create_project(request):
-    # Hanya superuser pemilik portofolio yang boleh menambah proyek.
+    # Hanya pemilik portofolio yang boleh membuat proyek.
     if not request.user.is_superuser:
         raise PermissionDenied
 
@@ -91,34 +91,41 @@ def get_projects_json(request):
     if title_query:
         projects = projects.filter(title__icontains=title_query)
 
-    # Natural key menampilkan username pemberi star, bukan ID database internal.
+    # API hanya mengirim informasi proyek yang boleh dibaca publik.
     projects_json = serializers.serialize(
         "json",
         projects,
-        use_natural_foreign_keys=True,
+        fields=(
+            "title",
+            "description",
+            "tech_stack",
+            "project_url",
+            "project_image_url",
+        ),
     )
     return HttpResponse(projects_json, content_type="application/json")
 
 
 @login_required(login_url="/login/")
 def delete_project(request, project_id):
-    # Hanya superuser pemilik portofolio yang boleh menghapus proyek.
+    # Editor tidak boleh menghapus meskipun boleh mengubah proyek.
     if not request.user.is_superuser:
         raise PermissionDenied
 
+    # Penghapusan hanya boleh berasal dari form POST, bukan membuka URL dengan GET.
+    if request.method != "POST":
+        return HttpResponseNotAllowed(["POST"])
+
     project = get_object_or_404(Project, pk=project_id)
-
-    if request.method == "POST":
-        project.delete()
-        messages.success(request, "Project berhasil dihapus!")
-
+    project.delete()
+    messages.success(request, "Project berhasil dihapus!")
     return redirect("main:show_projects")
 
 
 @login_required(login_url="/login/")
 def update_project(request, project_id):
-    # Perubahan proyek juga dibatasi untuk pemilik portofolio.
-    if not request.user.is_superuser:
+    # Pemilik adalah superuser; Editor mendapat permission change_project.
+    if not request.user.has_perm("main.change_project"):
         raise PermissionDenied
 
     project = get_object_or_404(Project, pk=project_id)
@@ -188,11 +195,14 @@ def logout_user(request):
 def toggle_star(request, project_id):
     project = get_object_or_404(Project, pk=project_id)
 
-    # Star hanya diubah lewat POST agar perubahan data tidak dilakukan oleh GET.
-    if request.method == "POST":
-        if project.starred_by.filter(pk=request.user.pk).exists():
-            project.starred_by.remove(request.user)
-        else:
-            project.starred_by.add(request.user)
+    # Star adalah perubahan data, jadi hanya boleh dikirim lewat POST.
+    if request.method != "POST":
+        return HttpResponseNotAllowed(["POST"])
+
+    # Jika sudah memberi star, batalkan; jika belum, tambahkan.
+    if project.starred_by.filter(pk=request.user.pk).exists():
+        project.starred_by.remove(request.user)
+    else:
+        project.starred_by.add(request.user)
 
     return redirect("main:show_projects")
