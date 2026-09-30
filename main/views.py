@@ -5,12 +5,13 @@ from django.contrib.auth.decorators import login_required
 from django.contrib.auth.forms import AuthenticationForm, UserCreationForm
 from django.core import serializers
 from django.core.exceptions import PermissionDenied
-from django.http import HttpResponse
+from django.http import HttpResponse, JsonResponse
 from django.shortcuts import get_object_or_404, redirect, render
 from django.utils import timezone
 from django.http import HttpResponseNotAllowed
 from main.forms import ProjectForm
 from main.models import Experience, Project, Skill
+from django.views.decorators.http import require_POST
 
 
 def show_main(request):
@@ -60,6 +61,7 @@ def show_projects(request):
         "name": "Faatir Wibowo Rachmad",
         "project_list": projects,
         "title_query": title_query,
+        "form": ProjectForm(),
     }
     return render(request, "projects.html", context)
 
@@ -91,19 +93,19 @@ def get_projects_json(request):
     if title_query:
         projects = projects.filter(title__icontains=title_query)
 
-    # API hanya mengirim informasi proyek yang boleh dibaca publik.
-    projects_json = serializers.serialize(
-        "json",
-        projects,
-        fields=(
-            "title",
-            "description",
-            "tech_stack",
-            "project_url",
-            "project_image_url",
-        ),
-    )
-    return HttpResponse(projects_json, content_type="application/json")
+    data = [
+        {
+            "id": str(project.id),
+            "title": project.title,
+            "description": project.description,
+            "tech_stack": project.tech_stack,
+            "project_url": project.project_url,
+            "project_image_url": project.project_image_url,
+        }
+        for project in projects
+    ]
+
+    return JsonResponse(data, safe=False)
 
 
 @login_required(login_url="/login/")
@@ -206,3 +208,27 @@ def toggle_star(request, project_id):
         project.starred_by.add(request.user)
 
     return redirect("main:show_projects")
+
+
+@require_POST
+@login_required(login_url="/login/")
+def create_project_ajax(request):
+    if not request.user.is_superuser:
+        raise PermissionDenied
+
+    form = ProjectForm(request.POST)
+
+    if form.is_valid():
+        project = form.save()
+        return JsonResponse(
+            {"success": True, "message": "Proyek berhasil ditambahkan."},
+            status=201,
+        )
+
+    return JsonResponse(
+        {
+            "success": False,
+            "errors": form.errors.get_json_data(),
+        },
+        status=400,
+    )
