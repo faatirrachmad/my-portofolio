@@ -1141,3 +1141,67 @@ h3 {
         text-align: center;
     }
 }
+
+.toast-container {
+    position: fixed;
+    right: 1.5rem;
+    bottom: 1.5rem;
+    z-index: 1000;
+}
+
+.toast {
+    display: none;
+    width: min(360px, calc(100vw - 2rem));
+    padding: 1rem 1.25rem;
+    border: 1px solid var(--border-color);
+    border-radius: var(--radius);
+    background: var(--bg-secondary);
+    box-shadow: 0 0.75rem 2rem rgba(28, 25, 23, 0.16);
+}
+
+.toast.toast-visible {
+    display: block;
+    animation: toast-in 180ms ease-out;
+}
+
+.toast.toast-success {
+    border-left: 4px solid #16803c;
+}
+
+.toast.toast-error {
+    border-left: 4px solid #b42318;
+}
+
+.toast-title {
+    display: block;
+    font-weight: 700;
+}
+
+.toast-message {
+    margin: 0.35rem 0 0;
+    color: var(--text-muted);
+}
+
+@keyframes toast-in {
+    from {
+        opacity: 0;
+        transform: translateY(0.5rem);
+    }
+
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+@media (max-width: 600px) {
+    .toast-container {
+        right: 1rem;
+        bottom: 1rem;
+        left: 1rem;
+    }
+
+    .toast {
+        width: 100%;
+    }
+}
