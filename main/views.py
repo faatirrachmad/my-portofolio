@@ -88,11 +88,12 @@ def create_project(request):
 
 def get_projects_json(request):
     title_query = request.GET.get("title", "").strip()
-    projects = Project.objects.all()
+    projects = Project.objects.all().prefetch_related("starred_by")
 
     if title_query:
         projects = projects.filter(title__icontains=title_query)
 
+    is_authenticated = request.user.is_authenticated
     data = [
         {
             "id": str(project.id),
@@ -101,6 +102,11 @@ def get_projects_json(request):
             "tech_stack": project.tech_stack,
             "project_url": project.project_url,
             "project_image_url": project.project_image_url,
+            "star_count": project.starred_by.count(),
+            "is_starred": (
+                is_authenticated
+                and project.starred_by.filter(pk=request.user.pk).exists()
+            ),
         }
         for project in projects
     ]
