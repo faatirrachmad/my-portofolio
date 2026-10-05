@@ -6,6 +6,7 @@
 
 {% block content %}
 <main>
+    <input type="hidden" id="page-csrf-token" value="{{ csrf_token }}">
     <section class="experience-section" id="projects">
         <div class="container">
             <p class="section-kicker">Karya yang saya bangun</p>
@@ -27,48 +28,16 @@
                 <button type="submit" class="button">Cari</button>
             </form>
 
-            <div id="project-list" class="experience-grid project-grid">
-                {% for project in project_list %}
-                <article class="experience-card">
-                    {% if project.project_image_url %}
-                    <img src="{{ project.project_image_url }}" alt="Gambar {{ project.title }}" class="project-image">
-                    {% endif %}
-
-                    <h2>{{ project.title }}</h2>
-                    <span class="experience-category">{{ project.tech_stack }}</span>
-                    <p class="experience-description">{{ project.description }}</p>
-
-                    <div class="project-card-actions">
-                        <div class="project-actions">
-                            {% if project.project_url %}
-                            <a href="{{ project.project_url }}" class="button">Lihat Project</a>
-                            {% endif %}
-
-                            <!-- Pengguna terdaftar dapat memberi atau membatalkan star. -->
-                            {% include "components/project_star.html" with project=project %}
-
-                            <!-- Pemilik dan Editor boleh mengedit proyek. -->
-                            {% if perms.main.change_project %}
-                            <a href="{% url 'main:update_project' project.id %}" class="button button-secondary">
-                                Edit Project
-                            </a>
-                            {% endif %}
-
-                            <!-- Hanya pemilik yang boleh menghapus proyek. -->
-                            {% if user.is_superuser %}
-                            {% include "components/project_delete_modal.html" with project=project %}
-                            {% endif %}
-                        </div>
-                    </div>
-                </article>
-                {% empty %}
-                {% if title_query %}
-                <p class="empty-state">Tidak ada proyek dengan nama tersebut.</p>
-                {% else %}
-                <p class="empty-state">Belum ada proyek yang ditambahkan.</p>
-                {% endif %}
-                {% endfor %}
+            <div id="project-list" class="experience-grid project-grid" aria-live="polite" aria-busy="true"
+                data-star-url="{% url 'main:toggle_star' '00000000-0000-0000-0000-000000000000' %}"
+                data-edit-url="{% url 'main:update_project' '00000000-0000-0000-0000-000000000000' %}"
+                data-delete-url="{% url 'main:delete_project' '00000000-0000-0000-0000-000000000000' %}"
+                data-can-star="{{ user.is_authenticated|yesno:'true,false' }}"
+                data-can-edit="{{ perms.main.change_project|yesno:'true,false' }}"
+                data-can-delete="{{ user.is_superuser|yesno:'true,false' }}">
+                <p class="empty-state">Memuat proyek…</p>
             </div>
+
 
             {% if user.is_superuser %}
             <div id="project-modal" class="project-form-modal" role="dialog" aria-modal="true"

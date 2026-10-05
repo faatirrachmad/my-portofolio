@@ -17,6 +17,14 @@ class ProjectForm(ModelForm):
     def clean_description(self):
         return strip_tags(self.cleaned_data["description"]).strip()
 
+    def clean_tech_stack(self):
+        tech_stack = strip_tags(self.cleaned_data["tech_stack"]).strip()
+        if not tech_stack:
+            raise ValidationError(
+                "Teknologi proyek tidak boleh kosong setelah dibersihkan."
+            )
+        return tech_stack
+
     class Meta:
         model = Project
         fields = [
