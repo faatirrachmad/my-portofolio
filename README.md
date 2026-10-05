@@ -44,3 +44,19 @@ Class :   PBP C
 **Strategi prompting**: Saya menyampaikan aturan akses dari rubrik, lalu meminta AI mengidentifikasi bagian aplikasi yang perlu diperiksa, terutama pas perbedaan hak Editor dan pemilik serta kemungkinan data pengguna ikut terbuka melalui API.
 
 **Evaluasi dan verifikasi**: Saran AI saya gunakan sebagai referensi dan saya sesuaikan dengan model Project, URL, serta template proyek. Saran tersebut tetap perlu diperiksa pada aplikasi yang berjalan karena AI tidak mengetahui kondisi aktual Group, permission, dan database yang saya gunakan. Pengujian akhir untuk setiap role dilakukan dengan memeriksa akses melalui halaman dan URL aksi secara langsung.
+
+
+
+## Tugas 5
+
+1. Debouncing menunda request pencarian sampe pengguna berhenti mengetik selama jeda tertentu. lalu pada fitur pencarian proyek, jedanya 300 ms. Ini mengurangi jumlah request yang dikirim ke server dibandingkan mengirim request setiap kali satu karakter diketik.
+
+2. `fetch()` mengembalikan sebuah Promise. `await` membuat fungsi async menunggu sampai Promise tersebut selesai sebelum melanjutkan ke baris berikutnya, misalnya untuk memeriksa status respons dan membaca JSON. Tanpa `await` atau penanganan Promise lain, kode yang membaca respons bisa berjalan sebelum data tersedia.
+
+3. XSS terjadi ketika teks dari pengguna diperlakukan sebagai HTML atau JavaScript oleh browser. Data dari AJAX berisiko jika dimasukkan ke halaman dengan `innerHTML`. Pada halaman proyek, teks dari JSON ditampilkan menggunakan `textContent`, sedangkan input teks dibersihkan di server dengan `strip_tags` melalui `ModelForm`.
+
+**AI Disclosure**: Saya menggunakan ChatGPT untuk membantu membaca checklist Tugas 5, mengecek implementasi AJAXnya, dan mencari kekurangan pada pencarian, token CSRF, lalu buat sanitasi input. Saya meminta AI menjelaskan perubahan yang diperlukan dan memberi contoh kode yang kemudian saya sesuaikan dengan struktur proyek.
+
+**Strategi prompting**: Saya memberikan checklist tugas dan potongan kode proyek saya yang relevan, lalu meminta AI untuk ngecek daftar JSON, pencarian dengan debounce, izin pengguna, CSRF, toast, dan perlindungan XSS.
+
+**Evaluasi dan verifikasi**: Saya memeriksa kode hasil perubahan dan menjalankan `python manage.py check`. Saya juga mengecek tab Network di browser; request pemuatan proyek terlihat sebagai Fetch dengan status HTTP 200. Hasil dari AI tetap perlu dicocokkan dengan rubrik dan diuji di aplikasi karena AI dapat melewatkan masalah seperti kesalahan indentasi atau field yang belum disanitasi.
