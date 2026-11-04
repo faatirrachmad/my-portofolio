@@ -6,68 +6,39 @@
 
 {% block content %}
 <main>
-    <input type="hidden" id="page-csrf-token" value="{{ csrf_token }}">
     <section class="experience-section" id="projects">
         <div class="container">
             <p class="section-kicker">Karya yang saya bangun</p>
             <div class="project-header">
                 <h1>Projects</h1>
-                <!-- Tombol tambah hanya ditampilkan kepada pemilik portofolio. -->
-                {% if user.is_superuser %}
-                <button type="button" id="open-project-modal" class="button project-add-button">
-                    <span aria-hidden="true">+</span>
-                    Tambah Proyek
-                </button>
-                {% endif %}
+                <div id="project-feedback" class="project-feedback" role="status" aria-live="polite"></div>
             </div>
-
-            <form id="project-search-form" method="get" action="{% url 'main:show_projects' %}" class="project-search">
-                <input id="project-search-input" type="search" name="title" value="{{ title_query }}"
-                    placeholder="Cari berdasarkan nama proyek" class="project-search__input"
-                    aria-label="Cari berdasarkan nama proyek">
-                <button type="submit" class="button">Cari</button>
-            </form>
-
-            <div id="project-list" class="experience-grid project-grid" aria-live="polite" aria-busy="true"
-                data-star-url="{% url 'main:toggle_star' '00000000-0000-0000-0000-000000000000' %}"
-                data-edit-url="{% url 'main:update_project' '00000000-0000-0000-0000-000000000000' %}"
-                data-delete-url="{% url 'main:delete_project' '00000000-0000-0000-0000-000000000000' %}"
-                data-can-star="{{ user.is_authenticated|yesno:'true,false' }}"
-                data-can-edit="{{ perms.main.change_project|yesno:'true,false' }}"
-                data-can-delete="{{ user.is_superuser|yesno:'true,false' }}">
-                <p class="empty-state">Memuat proyek…</p>
-            </div>
-
 
             {% if user.is_superuser %}
-            <div id="project-modal" class="project-form-modal" role="dialog" aria-modal="true"
-                aria-labelledby="project-modal-title" aria-hidden="true">
-                <div class="project-form-modal__content">
-                    <button type="button" id="close-project-modal" class="project-form-modal__close"
-                        aria-label="Tutup">&times;</button>
-                    <h2 id="project-modal-title">Tambah Proyek</h2>
-
-                    <form id="ajax-project-form" data-url="{% url 'main:create_project_ajax' %}">
-                        {% csrf_token %}
-                        {% for field in form %}
-                        <div class="form-group">
-                            <label for="{{ field.id_for_label }}">{{ field.label }}</label>
-                            {{ field }}
-                            {% for error in field.errors %}
-                            <p class="form-error">{{ error }}</p>
-                            {% endfor %}
-                        </div>
-                        {% endfor %}
-                        <button type="submit" class="button">Tambah Project</button>
-                    </form>
+            <section class="project-create" aria-labelledby="project-create-title">
+                <h2 id="project-create-title">Tambah Proyek</h2>
+                <div id="project-form-container">
+                    {% include "projects/_project_form.html" %}
                 </div>
-            </div>
+            </section>
             {% endif %}
+
+            <h2>Daftar Proyek</h2>
+            <label class="project-search-label" for="project-search-input">Cari proyek</label>
+            <input id="project-search-input" type="search" name="title"
+                placeholder="Cari berdasarkan nama proyek" class="project-search__input"
+                aria-label="Cari berdasarkan nama proyek"
+                hx-get="{% url 'main:project_list_htmx' %}"
+                hx-trigger="keyup changed delay:300ms, search"
+                hx-target="#project-list" hx-indicator="#project-search-indicator">
+            <span id="project-search-indicator" class="htmx-indicator" aria-live="polite">Mencari…</span>
+
+            <div id="project-list" class="experience-grid project-grid" aria-live="polite"
+                hx-get="{% url 'main:project_list_htmx' %}" hx-trigger="load"
+                hx-swap="innerHTML">
+                <p class="empty-state">Memuat proyek…</p>
+            </div>
         </div>
     </section>
 </main>
 {% endblock content %}
-{% block scripts %}
-{% load static %}
-<script src="{% static 'js/projects.js' %}" defer></script>
-{% endblock scripts %}

@@ -1,0 +1,26 @@
+<article id="project-{{ project.id }}" class="experience-card">
+    {% if project.project_image_url %}
+    <img src="{{ project.project_image_url }}" alt="Gambar {{ project.title }}" class="project-image" loading="lazy">
+    {% endif %}
+    <h2>{{ project.title }}</h2>
+    <span class="experience-category">{{ project.tech_stack }}</span>
+    <p class="experience-description">{{ project.description }}</p>
+    <div class="project-actions">
+        {% if project.project_url %}<a href="{{ project.project_url }}" class="button" target="_blank" rel="noopener noreferrer">Lihat Project</a>{% endif %}
+        {% if project.repository_url %}<a href="{{ project.repository_url }}" class="button button-secondary" target="_blank" rel="noopener noreferrer">Lihat Repository</a>{% endif %}
+        {% if user.is_authenticated %}
+        <form method="post" action="{% url 'main:toggle_star' project.id %}" class="star-form">{% csrf_token %}<button type="submit" class="button button-star">{% if user in project.starred_by.all %}Unstar{% else %}Star{% endif %} ★ {{ project.starred_by.count }}</button></form>
+        {% endif %}
+        {% if perms.main.change_project %}
+        <button type="button" class="button button-secondary"
+            hx-get="{% url 'main:edit_project_htmx' project.id %}"
+            hx-target="closest article" hx-swap="outerHTML">Edit Project</button>
+        {% endif %}
+        {% if user.is_superuser %}
+        <button type="button" class="button button-danger"
+            hx-delete="{% url 'main:delete_project_htmx' project.id %}"
+            hx-target="closest article" hx-swap="outerHTML"
+            hx-confirm="Yakin ingin menghapus proyek {{ project.title }}?">Hapus Proyek</button>
+        {% endif %}
+    </div>
+</article>

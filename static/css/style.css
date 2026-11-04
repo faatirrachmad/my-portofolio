@@ -981,6 +981,35 @@ h3 {
     border-color: var(--accent-purple-light);
 }
 
+.project-create {
+    margin: 2rem 0 3rem;
+}
+
+.project-feedback {
+    color: #18794e;
+    min-height: 1.5rem;
+}
+
+.project-search-label {
+    display: block;
+    margin: 1rem 0 0.4rem;
+}
+
+.htmx-indicator {
+    display: none;
+    margin-left: 0.6rem;
+    color: #315f86;
+}
+
+.htmx-request .htmx-indicator,
+.htmx-request.htmx-indicator {
+    display: inline;
+}
+
+.project-inline-edit {
+    width: 100%;
+}
+
 .project-actions {
     display: flex;
     align-items: center;

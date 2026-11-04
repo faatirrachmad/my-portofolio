@@ -32,6 +32,7 @@ class ProjectForm(ModelForm):
             "description",
             "tech_stack",
             "project_url",
+            "repository_url",
             "project_image_url",
         ]
 
@@ -40,6 +41,7 @@ class ProjectForm(ModelForm):
             "description": "Deskripsi Proyek",
             "tech_stack": "Teknologi yang Digunakan",
             "project_url": "URL Proyek",
+            "repository_url": "URL Repository",
             "project_image_url": "URL Gambar Proyek",
         }
 
@@ -64,6 +66,11 @@ class ProjectForm(ModelForm):
             "project_url": URLInput(
                 attrs={
                     "placeholder": "https://github.com/kakBurhan/burhanquestv4",
+                }
+            ),
+            "repository_url": URLInput(
+                attrs={
+                    "placeholder": "https://github.com/username/project",
                 }
             ),
             "project_image_url": URLInput(

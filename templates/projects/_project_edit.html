@@ -1,0 +1,19 @@
+<article id="project-{{ project.id }}" class="experience-card">
+    <form class="project-form project-inline-edit"
+        hx-put="{% url 'main:update_project_htmx' project.id %}"
+        hx-target="closest article" hx-swap="outerHTML">
+        {% for field in form %}
+        <div class="form-group">
+            <label for="{{ field.id_for_label }}">{{ field.label }}</label>
+            {{ field }}
+            {% for error in field.errors %}<p class="form-error">{{ error }}</p>{% endfor %}
+        </div>
+        {% endfor %}
+        <div class="project-actions">
+            <button type="submit" class="button">Simpan Perubahan</button>
+            <button type="button" class="button button-secondary"
+                hx-get="{% url 'main:project_row_htmx' project.id %}"
+                hx-target="closest article" hx-swap="outerHTML">Batal</button>
+        </div>
+    </form>
+</article>

@@ -5,13 +5,12 @@ from django.contrib.auth.decorators import login_required
 from django.contrib.auth.forms import AuthenticationForm, UserCreationForm
 from django.core import serializers
 from django.core.exceptions import PermissionDenied
-from django.http import HttpResponse, JsonResponse
+from django.http import HttpResponse, HttpResponseNotAllowed, JsonResponse, QueryDict
 from django.shortcuts import get_object_or_404, redirect, render
 from django.utils import timezone
-from django.http import HttpResponseNotAllowed
 from main.forms import ProjectForm
 from main.models import Experience, Project, Skill
-from django.views.decorators.http import require_POST
+from django.views.decorators.http import require_http_methods, require_POST
 
 
 def show_main(request):
@@ -101,6 +100,7 @@ def get_projects_json(request):
             "description": project.description,
             "tech_stack": project.tech_stack,
             "project_url": project.project_url,
+            "repository_url": project.repository_url,
             "project_image_url": project.project_image_url,
             "star_count": project.starred_by.count(),
             "is_starred": (
@@ -238,3 +238,90 @@ def create_project_ajax(request):
         },
         status=400,
     )
+
+
+def _project_results(request):
+    query = request.GET.get("title", "").strip()
+    projects = Project.objects.all().prefetch_related("starred_by")
+    if query:
+        projects = projects.filter(title__icontains=query)
+    return projects
+
+
+def project_list_fragment(request):
+    """Return the project cards used by HTMX search and mutations."""
+    return render(
+        request,
+        "projects/_project_list.html",
+        {"project_list": _project_results(request)},
+    )
+
+
+@require_POST
+@login_required(login_url="/login/")
+def create_project_htmx(request):
+    if not request.user.is_superuser:
+        raise PermissionDenied
+    form = ProjectForm(request.POST)
+    if not form.is_valid():
+        response = render(
+            request, "projects/_project_form.html", {"form": form}
+        )
+        response["HX-Retarget"] = "#project-form-container"
+        response["HX-Reswap"] = "innerHTML"
+        return response
+    project = form.save()
+    response = render(
+        request, "projects/_project_card.html", {"project": project}
+    )
+    response.content += (
+        '<div id="project-feedback" hx-swap-oob="innerHTML">'
+        'Proyek berhasil ditambahkan.</div>'
+    ).encode()
+    return response
+
+
+@require_http_methods(["DELETE"])
+@login_required(login_url="/login/")
+def delete_project_htmx(request, project_id):
+    if not request.user.is_superuser:
+        raise PermissionDenied
+    project = get_object_or_404(Project, pk=project_id)
+    project.delete()
+    # Return an empty fragment (200) so HTMX removes the targeted article.
+    return HttpResponse("")
+
+
+@login_required(login_url="/login/")
+def edit_project_htmx(request, project_id):
+    if not request.user.has_perm("main.change_project"):
+        raise PermissionDenied
+    project = get_object_or_404(Project, pk=project_id)
+    return render(
+        request,
+        "projects/_project_edit.html",
+        {"project": project, "form": ProjectForm(instance=project)},
+    )
+
+
+@login_required(login_url="/login/")
+def project_row_htmx(request, project_id):
+    project = get_object_or_404(Project, pk=project_id)
+    return render(request, "projects/_project_card.html", {"project": project})
+
+
+@login_required(login_url="/login/")
+def update_project_htmx(request, project_id):
+    if not request.user.has_perm("main.change_project"):
+        raise PermissionDenied
+    if request.method != "PUT":
+        return HttpResponseNotAllowed(["PUT"])
+    project = get_object_or_404(Project, pk=project_id)
+    form = ProjectForm(QueryDict(request.body), instance=project)
+    if not form.is_valid():
+        return render(request, "projects/_project_edit.html", {
+            "project": project, "form": form,
+        })
+    return render(request, "projects/_project_card.html", {
+        "project": form.save(),
+    })

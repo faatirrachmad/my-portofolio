@@ -56,6 +56,7 @@ class Project(models.Model):
     description = models.TextField()
     tech_stack = models.CharField(max_length=255)
     project_url = models.URLField(blank=True)
+    repository_url = models.URLField(blank=True)
     project_image_url = models.URLField(blank=True, max_length=500)
     # Satu proyek bisa di-star banyak pengguna dan satu pengguna bisa men-star banyak proyek.
     starred_by = models.ManyToManyField(

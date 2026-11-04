@@ -13,6 +13,12 @@ from main.views import (
     register,
     login_user,
     logout_user,
+    project_list_fragment,
+    create_project_htmx,
+    delete_project_htmx,
+    edit_project_htmx,
+    project_row_htmx,
+    update_project_htmx,
 )
 
 app_name = "main"
@@ -44,5 +50,27 @@ urlpatterns = [
         "projects/add/ajax/",
         create_project_ajax,
         name="create_project_ajax",
+    ),
+    path("projects/htmx/", project_list_fragment, name="project_list_htmx"),
+    path("projects/htmx/add/", create_project_htmx, name="create_project_htmx"),
+    path(
+        "projects/htmx/<uuid:project_id>/delete/",
+        delete_project_htmx,
+        name="delete_project_htmx",
+    ),
+    path(
+        "projects/htmx/<uuid:project_id>/edit/",
+        edit_project_htmx,
+        name="edit_project_htmx",
+    ),
+    path(
+        "projects/htmx/<uuid:project_id>/row/",
+        project_row_htmx,
+        name="project_row_htmx",
+    ),
+    path(
+        "projects/htmx/<uuid:project_id>/update/",
+        update_project_htmx,
+        name="update_project_htmx",
     ),
 ]

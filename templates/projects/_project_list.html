@@ -1,0 +1,5 @@
+{% for project in project_list %}
+    {% include "projects/_project_card.html" %}
+{% empty %}
+<p class="empty-state">{% if request.GET.title %}Tidak ada proyek dengan nama tersebut.{% else %}Belum ada proyek yang ditambahkan.{% endif %}</p>
+{% endfor %}
