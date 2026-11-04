@@ -981,35 +981,6 @@ h3 {
     border-color: var(--accent-purple-light);
 }
 
-.project-create {
-    margin: 2rem 0 3rem;
-}
-
-.project-feedback {
-    color: #18794e;
-    min-height: 1.5rem;
-}
-
-.project-search-label {
-    display: block;
-    margin: 1rem 0 0.4rem;
-}
-
-.htmx-indicator {
-    display: none;
-    margin-left: 0.6rem;
-    color: #315f86;
-}
-
-.htmx-request .htmx-indicator,
-.htmx-request.htmx-indicator {
-    display: inline;
-}
-
-.project-inline-edit {
-    width: 100%;
-}
-
 .project-actions {
     display: flex;
     align-items: center;
@@ -1250,6 +1221,10 @@ h3 {
     display: flex;
 }
 
+.project-form-modal:popover-open {
+    display: flex;
+}
+
 .project-form-modal__content {
     position: relative;
     width: min(100%, 560px);
@@ -1271,7 +1246,7 @@ h3 {
     cursor: pointer;
 }
 
-#ajax-project-form {
+#project-form {
     display: grid;
     gap: 0.75rem;
 }

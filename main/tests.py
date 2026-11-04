@@ -1,9 +1,8 @@
+from django.contrib.auth.models import User
 from django.test import TestCase
 from django.urls import reverse
 from django.utils import timezone
-from django.contrib.auth.models import User
-from urllib.parse import urlencode
-from main.models import Experience, Project, Skill
+from main.models import Experience, Skill
 
 
 class MainTest(TestCase):
@@ -81,80 +80,24 @@ class MainTest(TestCase):
 
         self.assertContains(response, "Belum ada skill yang ditambahkan.")
 
-
-class ProjectHTMXTest(TestCase):
-    def setUp(self):
-        self.owner = User.objects.create_superuser(
-            username="owner", email="owner@example.com", password="test-pass"
-        )
-        self.client.force_login(self.owner)
-        self.project = Project.objects.create(
-            title="Portfolio App",
-            description="A Django portfolio project.",
-            tech_stack="Django",
-            repository_url="https://github.com/example/portfolio",
-        )
-
-    def test_project_page_exposes_tutorial_fields_and_controls(self):
+    def test_projects_page_uses_drf_ajax_and_csrf_cookie(self):
         response = self.client.get(reverse("main:show_projects"))
 
-        self.assertContains(response, "name=\"repository_url\"")
-        self.assertContains(response, "hx-post=")
-        self.assertContains(response, "hx-trigger=\"keyup changed delay:300ms, search\"")
-
-    def test_htmx_live_search_returns_project_fragment(self):
-        response = self.client.get(
-            reverse("main:project_list_htmx"), {"title": "portfolio"}
-        )
-
         self.assertEqual(response.status_code, 200)
-        self.assertContains(response, "Portfolio App")
-        self.assertContains(response, "Lihat Repository")
-        self.assertNotContains(response, "Belum ada proyek")
+        self.assertContains(response, 'id="project-search-form"')
+        self.assertContains(response, 'id="grid"')
+        self.assertContains(response, 'const BASE_PROJECTS_ENDPOINT = "/api/v1/projects/";')
+        self.assertContains(response, "X-CSRFToken")
+        self.assertNotContains(response, "hx-get=")
+        self.assertIn("csrftoken", response.cookies)
 
-    def test_htmx_add_and_inline_edit_project(self):
-        add_response = self.client.post(
-            reverse("main:create_project_htmx"),
-            {
-                "title": "New Project",
-                "description": "New description",
-                "tech_stack": "Python",
-                "repository_url": "https://github.com/example/new-project",
-            },
-            HTTP_HX_REQUEST="true",
+        owner = User.objects.create_superuser(
+            username="projects-owner",
+            password="test-password",
+            email="projects-owner@example.com",
         )
+        self.client.force_login(owner)
+        owner_page = self.client.get(reverse("main:show_projects"))
+        self.assertContains(owner_page, 'id="project-form"')
 
-        self.assertEqual(add_response.status_code, 200)
-        self.assertContains(add_response, "hx-swap-oob=\"innerHTML\"")
-        created = Project.objects.get(title="New Project")
-        edit_response = self.client.get(
-            reverse("main:edit_project_htmx", args=[created.pk])
-        )
-        self.assertContains(edit_response, "name=\"repository_url\"")
 
-        update_response = self.client.put(
-            reverse("main:update_project_htmx", args=[created.pk]),
-            urlencode({
-                "title": "Updated Project",
-                "description": "Updated description",
-                "tech_stack": "Django",
-                "repository_url": "https://github.com/example/updated-project",
-            }),
-            content_type="application/x-www-form-urlencoded",
-        )
-
-        self.assertEqual(update_response.status_code, 200)
-        created.refresh_from_db()
-        self.assertEqual(created.title, "Updated Project")
-        self.assertEqual(
-            created.repository_url,
-            "https://github.com/example/updated-project",
-        )
-
-    def test_htmx_delete_removes_project(self):
-        response = self.client.delete(
-            reverse("main:delete_project_htmx", args=[self.project.pk])
-        )
-
-        self.assertEqual(response.status_code, 200)
-        self.assertFalse(Project.objects.filter(pk=self.project.pk).exists())
