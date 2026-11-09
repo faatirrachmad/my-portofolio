@@ -1,8 +1,8 @@
-from django.contrib.auth.models import User
+from django.contrib.auth.models import Group, User
 from django.test import TestCase
 from django.urls import reverse
 from django.utils import timezone
-from main.models import Experience, Skill
+from main.models import Experience, Project, Skill
 
 
 class MainTest(TestCase):
@@ -99,5 +99,18 @@ class MainTest(TestCase):
         self.client.force_login(owner)
         owner_page = self.client.get(reverse("main:show_projects"))
         self.assertContains(owner_page, 'id="project-form"')
+
+        editor = User.objects.create_user(
+            username="projects-editor", password="test-password", is_staff=True
+        )
+        editor.groups.add(Group.objects.create(name="Editor"))
+        self.client.force_login(editor)
+        editor_page = self.client.get(reverse("main:show_projects"))
+        self.assertTrue(editor_page.context["can_edit_projects"])
+        project = Project.objects.create(
+            title="Editor test", description="Test", tech_stack="Django"
+        )
+        edit_url = reverse("main:update_project", args=[project.pk])
+        self.assertEqual(self.client.get(edit_url).status_code, 200)
 
 

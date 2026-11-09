@@ -59,6 +59,14 @@ def show_projects(request):
         "project_list": projects,
         "title_query": title_query,
         "form": ProjectForm(),
+        "can_edit_projects": (
+            request.user.is_authenticated
+            and (
+                request.user.is_superuser
+                or request.user.groups.filter(name="Editor").exists()
+                or request.user.has_perm("main.change_project")
+            )
+        ),
     }
     return render(request, "projects.html", context)
 
@@ -102,7 +110,11 @@ def delete_project(request, project_id):
 @login_required(login_url="/login/")
 def update_project(request, project_id):
     # Pemilik adalah superuser; Editor mendapat permission change_project.
-    if not request.user.has_perm("main.change_project"):
+    if not (
+        request.user.is_superuser
+        or request.user.groups.filter(name="Editor").exists()
+        or request.user.has_perm("main.change_project")
+    ):
         raise PermissionDenied
 
     project = get_object_or_404(Project, pk=project_id)

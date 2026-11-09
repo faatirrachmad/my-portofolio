@@ -164,6 +164,9 @@ class ProjectAPITest(APITestCase):
             403,
         )
         self.assertEqual(self.client.delete(self.detail_url).status_code, 403)
+        self.assertEqual(Project.objects.count(), 1)
+        self.project.refresh_from_db()
+        self.assertEqual(self.project.title, "Editor update")
 
     def test_wrong_method_is_rejected(self):
         self.client.force_authenticate(user=self.owner)
@@ -189,4 +192,3 @@ class ProjectAPITest(APITestCase):
             HTTP_X_CSRFTOKEN=token,
         )
         self.assertEqual(response.status_code, status.HTTP_201_CREATED)
-
