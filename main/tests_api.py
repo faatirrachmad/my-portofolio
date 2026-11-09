@@ -94,6 +94,24 @@ class ProjectAPITest(APITestCase):
             self.assertIn(field, response.data)
         self.assertEqual(Project.objects.count(), 1)
 
+    def test_serializer_removes_markup_from_project_text(self):
+        self.client.force_authenticate(user=self.owner)
+        response = self.client.post(
+            self.list_url,
+            {
+                **self.payload,
+                "title": "<b>New project</b>",
+                "description": "<p>A useful app</p>",
+                "tech_stack": "<i>Python</i>",
+            },
+            format="json",
+        )
+
+        self.assertEqual(response.status_code, status.HTTP_201_CREATED)
+        self.assertEqual(response.data["title"], "New project")
+        self.assertEqual(response.data["description"], "A useful app")
+        self.assertEqual(response.data["tech_stack"], "Python")
+
     def test_patch_put_and_delete(self):
         self.client.force_authenticate(user=self.owner)
         response = self.client.patch(
@@ -192,3 +210,17 @@ class ProjectAPITest(APITestCase):
             HTTP_X_CSRFTOKEN=token,
         )
         self.assertEqual(response.status_code, status.HTTP_201_CREATED)
+
+    def test_session_star_requires_csrf_token(self):
+        client = APIClient(enforce_csrf_checks=True)
+        self.assertTrue(client.login(username="visitor", password="test-password"))
+
+        response = client.post(self.star_url)
+        self.assertEqual(response.status_code, status.HTTP_403_FORBIDDEN)
+        self.assertFalse(self.project.starred_by.filter(pk=self.visitor.pk).exists())
+
+        client.get(reverse("main:show_projects"))
+        token = client.cookies["csrftoken"].value
+        response = client.post(self.star_url, HTTP_X_CSRFTOKEN=token)
+        self.assertEqual(response.status_code, status.HTTP_200_OK)
+        self.assertTrue(self.project.starred_by.filter(pk=self.visitor.pk).exists())
