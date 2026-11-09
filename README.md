@@ -4,6 +4,64 @@ NPM : 2506595146
 
 Class :   PBP C
 
+## Portofolio Pribadi
+
+Aplikasi ini menampilkan profil, pengalaman, skills, dan proyek Faatir Wibowo
+Rachmad. Profil ditampilkan melalui template Django, sedangkan data pengalaman,
+skills, dan proyek dikelola melalui database. Halaman Projects memakai Django
+REST Framework dan Fetch API untuk menampilkan, mencari, menambah, mengubah,
+memberi star, dan menghapus proyek tanpa memuat ulang halaman.
+
+### Teknologi
+
+- Python dan Django
+- Django REST Framework dengan session authentication
+- SQLite untuk pengembangan lokal
+- HTML, CSS, dan JavaScript Fetch API
+
+### Menjalankan secara lokal
+
+1. Buat dan aktifkan virtual environment.
+
+   ```powershell
+   py -m venv .venv
+   .venv\Scripts\Activate.ps1
+   ```
+
+2. Pasang dependency, siapkan database, dan buat akun pemilik.
+
+   ```powershell
+   pip install -r requirements.txt
+   py manage.py migrate
+   py manage.py createsuperuser
+   ```
+
+3. Jalankan server dan buka `http://127.0.0.1:8000/`.
+
+   ```powershell
+   py manage.py runserver
+   ```
+
+Pengunjung dapat melihat dan mencari proyek. Pengguna yang login dapat memberi
+atau membatalkan star. Anggota grup `Editor` dapat mengubah proyek, sementara
+superuser dapat menambah, mengubah, dan menghapus proyek.
+
+### API proyek
+
+Semua endpoint berada di bawah prefix `/api/v1/`.
+
+| Method | Endpoint | Akses dan fungsi |
+| --- | --- | --- |
+| `GET` | `/api/v1/projects/` | Publik; daftar proyek, mendukung pencarian `?title=` |
+| `POST` | `/api/v1/projects/` | Pemilik; membuat proyek |
+| `GET` | `/api/v1/projects/<uuid>/` | Publik; detail proyek |
+| `PUT`, `PATCH` | `/api/v1/projects/<uuid>/` | Editor dan pemilik; mengganti atau memperbarui proyek |
+| `DELETE` | `/api/v1/projects/<uuid>/` | Pemilik; menghapus proyek |
+| `POST` | `/api/v1/projects/<uuid>/star/` | Pengguna login; menambah atau membatalkan star miliknya |
+
+Request yang mengubah data memakai session authentication dan token CSRF.
+Jalankan tes dengan `py manage.py test main`.
+
 ### Tugas 1
 1. iya, saya menggunakan elemen semantik HTML5 yaitu seperti <header>
  <nav>,<main>,<section>, <article>, dan <footer>. elemen elemen ini bantu buat membagi bagi setiap halaman sesuai fungsi fungsinya. misalnya kalo <header> itu untuk navigasi, <section> niat bagian profil, pengalaman, pendidikan, dll. elemen elemen ini bikin kode saya lebih rapih dan gampang dipahami. 
@@ -60,3 +118,57 @@ Class :   PBP C
 **Strategi prompting**: Saya memberikan checklist tugas dan potongan kode proyek saya yang relevan, lalu meminta AI untuk ngecek daftar JSON, pencarian dengan debounce, izin pengguna, CSRF, toast, dan perlindungan XSS.
 
 **Evaluasi dan verifikasi**: Saya memeriksa kode hasil perubahan dan menjalankan `python manage.py check`. Saya juga mengecek tab Network di browser; request pemuatan proyek terlihat sebagai Fetch dengan status HTTP 200. Hasil dari AI tetap perlu dicocokkan dengan rubrik dan diuji di aplikasi karena AI dapat melewatkan masalah seperti kesalahan indentasi atau field yang belum disanitasi.
+
+### Tugas 6
+
+1. RESTful API mengatur akses ke resource melalui URL dan method HTTP yang
+   memiliki arti konsisten. Mengembalikan JSON saja belum cukup untuk disebut
+   RESTful karena API juga perlu memiliki pola resource, method, status respons,
+   dan aturan akses yang jelas. Pada API proyek ini, `GET` membaca daftar atau
+   detail proyek, `POST` membuat proyek, `PUT` mengganti data proyek secara
+   menyeluruh, `PATCH` memperbarui sebagian field, dan `DELETE` menghapusnya.
+   Contohnya, Editor dapat mengirim `PATCH /api/v1/projects/<uuid>/` hanya
+   dengan field `title` yang ingin diperbarui.
+
+2. Serializer mengubah object model Django menjadi data JSON dan memvalidasi
+   data masuk sebelum disimpan. Dibanding membuat dictionary secara manual
+   lalu mengembalikannya dengan `JsonResponse`, serializer mengurangi kode
+   berulang, menangani konversi field model, menyediakan error validasi per
+   field, dan membatasi field respons secara eksplisit. `ProjectSerializer`
+   juga menghitung jumlah star dan status star sebagai field read-only.
+
+3. Autentikasi mengenali siapa yang mengirim request, misalnya lewat session
+   login. Otorisasi menentukan tindakan yang boleh dilakukan oleh pengguna itu.
+   API memeriksa izin di server melalui `IsPortfolioOwnerOrEditorOrReadOnly`:
+   pengunjung hanya dapat membaca, pengguna login dapat memberi star, Editor
+   dapat memperbarui proyek, dan superuser dapat membuat, memperbarui, serta
+   menghapus proyek. Menyembunyikan tombol hanya mengubah tampilan; pengguna
+   tetap dapat memanggil endpoint API secara langsung.
+
+4. `SessionAuthentication` menggunakan cookie session browser. Tanpa
+   perlindungan CSRF, situs lain dapat mencoba membuat browser pengguna yang
+   sedang login mengirim request perubahan dengan cookie tersebut. Karena itu,
+   request `POST`, `PUT`, `PATCH`, dan `DELETE` memerlukan token CSRF yang cocok
+   dengan cookie. `force_authenticate()` hanya menetapkan pengguna untuk tes
+   dan melewati login serta pemeriksaan session/cookie, sehingga tidak
+   membuktikan perlindungan CSRF. Untuk mengujinya, gunakan
+   `APIClient(enforce_csrf_checks=True)`, login melalui `client.login()`, lalu
+   kirim request tanpa dan dengan token.
+
+**AI Disclosure**: Saya menggunakan ChatGPT untuk membantu membaca checklist
+Tugas 6, meninjau konsistensi izin dan alur edit proyek, serta menyusun draf
+penjelasan pertanyaan reflektif. Saya mencocokkan saran dengan kode proyek,
+mempertahankan aturan empat peran, menambahkan edit proyek melalui `PATCH`, dan
+menjalankan tes untuk memeriksa hasilnya. Jawaban reflektif saya sesuaikan
+dengan implementasi aktual; saran AI bukan pengganti pemeriksaan kode dan tes.
+
+**Strategi prompting**: Saya memberikan instruksi Tugas 6 dan konteks aplikasi
+Django yang sudah memakai serializer, permission class, session authentication,
+serta Fetch API. Saya meminta bantuan untuk menemukan kekurangan terhadap
+rubrik, terutama empat peran, CRUD tanpa reload, CSRF, dan pertanyaan reflektif.
+
+**Evaluasi dan verifikasi**: Saya meninjau izin pada endpoint dan tampilan
+bersama-sama karena tombol yang disembunyikan tidak mengamankan API. Tes
+otomatis memeriksa akses publik, peran Editor dan pemilik, validasi serta
+sanitasi input, operasi proyek, star, dan CSRF. Setelah perubahan, seluruh 25
+tes pada `main` lulus dan pemeriksaan sistem Django tidak menemukan masalah.
