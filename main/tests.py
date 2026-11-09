@@ -107,6 +107,9 @@ class MainTest(TestCase):
         self.client.force_login(editor)
         editor_page = self.client.get(reverse("main:show_projects"))
         self.assertTrue(editor_page.context["can_edit_projects"])
+        self.assertContains(editor_page, 'id="project-form"')
+        self.assertContains(editor_page, 'const CAN_EDIT_PROJECTS = "true"')
+        self.assertContains(editor_page, 'isEditing ? "PATCH" : "POST"')
         project = Project.objects.create(
             title="Editor test", description="Test", tech_stack="Django"
         )
